@@ -1,0 +1,53 @@
+digraph G {
+    // Define the overall graph attributes
+    rankdir=LR;
+    node [shape=none, fontsize=10];
+    edge [fontsize=10];
+
+    // Define the components with fields inside them, stacked vertically, with the component name on top
+    component1 [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD COLSPAN="1">Web Application</TD></TR>
+            <TR><TD PORT="f1">customer_id</TD></TR>
+            <TR><TD PORT="f2">order_id</TD></TR>
+            <TR><TD PORT="f3">order_amount</TD></TR>
+        </TABLE>>];
+    component2 [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD COLSPAN="1">Message Queue</TD></TR>
+            <TR><TD PORT="f4">order_message</TD></TR>
+        </TABLE>>];
+    component3 [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD COLSPAN="1">Database</TD></TR>
+            <TR><TD PORT="f5">db_customer_id</TD></TR>
+            <TR><TD PORT="f6">db_order_id</TD></TR>
+            <TR><TD PORT="f7">db_order_amount</TD></TR>
+        </TABLE>>];
+    component4 [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD COLSPAN="1">ETL Process</TD></TR>
+            <TR><TD PORT="f8">etl_customer_id</TD></TR>
+            <TR><TD PORT="f9">etl_order_id</TD></TR>
+            <TR><TD PORT="f10">etl_order_amount</TD></TR>
+        </TABLE>>];
+    component5 [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD COLSPAN="1">Data Warehouse</TD></TR>
+            <TR><TD PORT="f11">dw_customer_id</TD></TR>
+            <TR><TD PORT="f12">dw_order_id</TD></TR>
+            <TR><TD PORT="f13">dw_order_amount</TD></TR>
+        </TABLE>>];
+
+    // Define the edges representing data flow between fields
+    component1:f1 -> component2:f4 [label="to"];
+    component2:f4 -> component3:f5 [label="from"];
+    component1:f2 -> component3:f6 [label="to"];
+    component1:f3 -> component3:f7 [label="to"];
+    component3:f5 -> component4:f8 [label="to"];
+    component3:f6 -> component4:f9 [label="to"];
+    component3:f7 -> component4:f10 [label="to"];
+    component4:f8 -> component5:f11 [label="to"];
+    component4:f9 -> component5:f12 [label="to"];
+    component4:f10 -> component5:f13 [label="to"];
+}

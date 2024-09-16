@@ -1,0 +1,22 @@
+subgraph cluster_getCenterText {
+  label = "getCenterText";
+  getCenterText;
+  productStatusCenterText -> getCenterText;
+  pillCenterTextCode -> getCenterText;
+  reasonCode -> getCenterText;
+}
+
+subgraph cluster_getPillDescription {
+  label = "getPillDescription";
+  getPillDescription;
+  descriptionStatus -> getPillDescription;
+  description -> getPillDescription;
+  descriptionCodes -> getPillDescription;
+  reasonCode -> getPillDescription;
+}
+
+subgraph cluster_getColorCode {
+  label = "getColorCode";
+  getColorCode;
+  color -> getColorCode;
+}

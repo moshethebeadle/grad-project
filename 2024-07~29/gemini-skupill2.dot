@@ -1,0 +1,27 @@
+digraph PillStatusService {
+
+subgraph cluster_Request { label = "Request"; node [shape=rectangle]; PillRequestDto [label="PillRequestDto\n- productOptionId\n- vendorSku\n- statusId\n- inStock\n- competitive\n- sourceable\n- reasonCode"]; }
+
+subgraph cluster_Repositories { label = "Repositories"; node [shape=cylinder]; PillDecisionTreeRepository [label="PillDecisionTreeRepository"]; StatusDetailsRepository [label="StatusDetailsRepository"]; }
+
+subgraph cluster_Entities { label = "Entities"; node [shape=rectangle]; PillDecisionTreeEntity [label="PillDecisionTreeEntity\n- color\n- indicator\n- centerTextCode\n- descriptionCodes"]; StatusDetailsEntity [label="StatusDetailsEntity\n- centerText\n- descriptionStatus\n- description"]; }
+
+subgraph cluster_Logic { label = "Logic"; node [shape=ellipse]; PillServiceHelper [label="PillServiceHelper\n- getCenterText()\n- getPillDescription()"]; }
+
+subgraph cluster_Response { label = "Response"; node [shape=rectangle]; PillDto [label="PillDto\n- productOptionId\n- color\n- colorCode\n- indicator\n- centerText\n- descriptions"]; PillDescription [label="PillDescription\n- status\n- description"]; }
+
+PillRequestDto -> PillService;
+
+PillService -> PillDecisionTreeRepository [label="getPill(inStock, sourceable, competitive, statusId)"]; PillService -> StatusDetailsRepository [label="getById(statusId)"];
+
+PillDecisionTreeRepository -> PillDecisionTreeEntity; StatusDetailsRepository -> StatusDetailsEntity;
+
+PillDecisionTreeEntity -> PillServiceHelper; StatusDetailsEntity -> PillServiceHelper; PillRequestDto -> PillServiceHelper;
+
+PillServiceHelper -> PillDto [label="centerText, colorCode, descriptions"];
+
+PillService -> PillDto;
+
+PillDto -> PillDescription;
+
+}

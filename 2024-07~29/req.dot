@@ -1,0 +1,64 @@
+digraph G {
+    // Define the overall graph attributes
+    rankdir=LR;
+    node [shape=none, fontsize=10];
+    edge [fontsize=10];
+
+    // Define the DTOs and entities with vertically stacked fields
+    RequestDTO [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD COLSPAN="1">RequestDTO</TD></TR>
+            <TR><TD PORT="a">a</TD></TR>
+            <TR><TD PORT="b">b</TD></TR>
+            <TR><TD PORT="c">c</TD></TR>
+            <TR><TD PORT="d">d</TD></TR>
+        </TABLE>>];
+    
+    LogicComponent1 [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD COLSPAN="1">Logic Component</TD></TR>
+            <TR><TD PORT="logic">Uses a, b, c</TD></TR>
+        </TABLE>>];
+    
+    EntityE [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD COLSPAN="1">Entity E</TD></TR>
+            <TR><TD PORT="e">e</TD></TR>
+            <TR><TD PORT="f">f</TD></TR>
+        </TABLE>>];
+    
+    EntityG [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD COLSPAN="1">Entity G</TD></TR>
+            <TR><TD PORT="g">g</TD></TR>
+            <TR><TD PORT="h">h</TD></TR>
+        </TABLE>>];
+    
+    LogicComponent2 [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD COLSPAN="1">Logic Component</TD></TR>
+            <TR><TD PORT="logic">Uses a, e, g to generate j</TD></TR>
+        </TABLE>>];
+    
+    ResponseDTO [label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+            <TR><TD COLSPAN="1">ResponseDTO</TD></TR>
+            <TR><TD PORT="d">d</TD></TR>
+            <TR><TD PORT="f">f</TD></TR>
+            <TR><TD PORT="j">j</TD></TR>
+        </TABLE>>];
+
+    // Define the edges representing data flow between fields
+    RequestDTO:a -> LogicComponent1:logic [label="uses"];
+    RequestDTO:b -> LogicComponent1:logic [label="uses"];
+    RequestDTO:c -> LogicComponent1:logic [label="uses"];
+    LogicComponent1:logic -> EntityE:e [label="loads"];
+    LogicComponent1:logic -> EntityE:f [label="loads"];
+    RequestDTO:c -> EntityG:g [label="loads"];
+    EntityE:e -> LogicComponent2:logic [label="uses"];
+    EntityG:g -> LogicComponent2:logic [label="uses"];
+    LogicComponent2:logic -> ResponseDTO:j [label="generates"];
+    RequestDTO:d -> ResponseDTO:d [label="forms"];
+    EntityE:f -> ResponseDTO:f [label="forms"];
+}
+

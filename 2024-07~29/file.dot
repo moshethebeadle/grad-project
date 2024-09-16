@@ -1,0 +1,38 @@
+digraph DetailedDFD {
+    rankdir=LR;
+    node [shape=rectangle];
+
+    // External Entity
+    Customer [shape=ellipse, label="Customer"];
+
+    // Fields
+    "customer_id" [shape=record, label="customer_id"];
+    "order_id" [shape=record, label="order_id"];
+    "product_id" [shape=record, label="product_id"];
+    "quantity" [shape=record, label="quantity"];
+    "total_price" [shape=record, label="total_price"];
+
+    // Processes
+    "Process Order" [shape=circle, label="Process Order"];
+    "Calculate Total" [shape=circle, label="Calculate Total"];
+    "Update Inventory" [shape=circle, label="Update Inventory"];
+
+    // Data Stores
+    "Orders Database" [shape=cylinder, label="Orders Database"];
+    "Inventory Database" [shape=cylinder, label="Inventory Database"];
+
+    // Data Flows
+    Customer -> "customer_id";
+    Customer -> "order_id";
+    "customer_id" -> "Process Order";
+    "order_id" -> "Process Order";
+    "Process Order" -> "product_id";
+    "Process Order" -> "quantity";
+    "product_id" -> "Calculate Total";
+    "quantity" -> "Calculate Total";
+    "Calculate Total" -> "total_price";
+    "total_price" -> "Orders Database";
+    "product_id" -> "Update Inventory";
+    "quantity" -> "Update Inventory";
+    "Update Inventory" -> "Inventory Database";
+}

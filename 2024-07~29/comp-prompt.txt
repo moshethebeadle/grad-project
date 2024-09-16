@@ -1,0 +1,3 @@
+that was good -- thanks
+the fields were stacked vertically... that's what i wanted
+However, the component name was still left of its fields... is there any way to put component name on top?

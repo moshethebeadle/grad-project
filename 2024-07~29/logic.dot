@@ -1,0 +1,64 @@
+graph TD
+
+subgraph RequestDto
+    productOptionId
+    inStock
+    sourceable
+    competitive
+    statusId
+    reasonCode
+end
+
+subgraph PillDecisionTreeRepository[getPill]
+    inStock --> getPill
+    sourceable --> getPill
+    competitive --> getPill
+    statusId --> getPill
+end
+
+subgraph StatusDetailsRepository[getById]
+    statusId --> getById
+end
+
+subgraph PillServiceHelper
+    subgraph getCenterText
+        productStatusCenterText --> getCenterText
+        pillCenterTextCode --> getCenterText
+        reasonCode --> getCenterText
+    end
+    subgraph getPillDescription
+        descriptionStatus --> getPillDescription
+        description --> getPillDescription
+        descriptionCodes --> getPillDescription
+        reasonCode --> getPillDescription
+    end
+    subgraph getColorCode
+        color --> getColorCode
+    end
+end
+
+getPill --> color
+getPill --> indicator
+getPill --> pillCenterTextCode
+getPill --> descriptionCodes
+getById --> productStatusCenterText
+getById --> descriptionStatus
+getById --> description
+getCenterText --> centerText
+getPillDescription --> descriptions
+getColorCode --> colorCode
+
+subgraph ResponseDto
+    productOptionId
+    color
+    colorCode
+    indicator
+    centerText
+    descriptions
+end
+
+RequestDto --> PillDecisionTreeRepository
+RequestDto --> StatusDetailsRepository
+PillServiceHelper --> ResponseDto
+PillDecisionTreeRepository --> PillServiceHelper
+StatusDetailsRepository --> PillServiceHelper

@@ -1,0 +1,66 @@
+digraph PillStatusService {
+
+  subgraph cluster_Request {
+    label = "Request";
+    node [shape=rectangle];
+    PillRequestDto [label="PillRequestDto"];
+    PillRequestDto_fields [shape=plaintext, label="|- productOptionId\n|- vendorSku\n|- statusId\n|- inStock\n|- competitive\n|- sourceable\n|- reasonCode"];
+    PillRequestDto -> PillRequestDto_fields;
+  }
+
+  subgraph cluster_Repositories {
+    label = "Repositories";
+    node [shape=cylinder];
+    PillDecisionTreeRepository [label="PillDecisionTreeRepository"];
+    StatusDetailsRepository [label="StatusDetailsRepository"];
+  }
+
+  subgraph cluster_Entities {
+    label = "Entities";
+    node [shape=rectangle];
+    PillDecisionTreeEntity [label="PillDecisionTreeEntity"];
+    PillDecisionTreeEntity_fields [shape=plaintext, label="|- color\n|- indicator\n|- centerTextCode\n|- descriptionCodes"];
+    PillDecisionTreeEntity -> PillDecisionTreeEntity_fields;
+    StatusDetailsEntity [label="StatusDetailsEntity"];
+    StatusDetailsEntity_fields [shape=plaintext, label="|- centerText\n|- descriptionStatus\n|- description"];
+    StatusDetailsEntity -> StatusDetailsEntity_fields;
+  }
+
+  subgraph cluster_Logic {
+    label = "Logic";
+    node [shape=ellipse];
+    PillServiceHelper [label="PillServiceHelper"];
+    PillServiceHelper_methods [shape=plaintext, label="|- getCenterText()\n|- getPillDescription()"];
+    PillServiceHelper -> PillServiceHelper_methods;
+  }
+
+  subgraph cluster_Response {
+    label = "Response";
+    node [shape=rectangle];
+    PillDto [label="PillDto"];
+    PillDto_fields [shape=plaintext, label="|- productOptionId\n|- color\n|- colorCode\n|- indicator\n|- centerText\n|- descriptions"];
+    PillDto -> PillDto_fields;
+    PillDescription [label="PillDescription"];
+    PillDescription_fields [shape=plaintext, label="|- status\n|- description"];
+    PillDescription -> PillDescription_fields;
+  }
+
+  PillRequestDto -> PillService;
+
+  PillService -> PillDecisionTreeRepository [label="getPill(inStock, sourceable, competitive, statusId)"]; 
+  PillService -> StatusDetailsRepository [label="getById(statusId)"];
+
+  PillDecisionTreeRepository -> PillDecisionTreeEntity; 
+  StatusDetailsRepository -> StatusDetailsEntity;
+
+  PillDecisionTreeEntity -> PillServiceHelper; 
+  StatusDetailsEntity -> PillServiceHelper; 
+  PillRequestDto -> PillServiceHelper;
+
+  PillServiceHelper -> PillDto [label="centerText, colorCode, descriptions"];
+
+  PillService -> PillDto;
+
+  PillDto -> PillDescription;
+
+}

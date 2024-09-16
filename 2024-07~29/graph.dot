@@ -1,0 +1,49 @@
+digraph PillServiceDataFlow {
+  node [shape=box];
+
+  // DTOs
+  PillRequestDto [label="{PillRequestDto|\l • productOptionId\l • statusId\l • inStock\l • competitive\l • sourceable\l • reasonCode\l}"];
+  PillDto [label="{PillDto|\l • productOptionId\l • color\l • colorCode\l • indicator\l • centerText\l • descriptions\l}"];
+
+  // Repositories
+  PillDecisionTreeRepository [shape=circle, label="PillDecisionTreeRepository"];
+  StatusDetailsRepository [shape=circle, label="StatusDetailsRepository"];
+
+  // Functions
+  getPillDto [shape=circle, label="getPillDto"];
+  getPillDescriptions [shape=circle, label="getPillDescriptions"];
+  getCenterText [shape=circle, label="getCenterText"];
+  getColorCode [shape=circle, label="getColorCode"];
+  getPillDescription [shape=circle, label="getPillDescription"];
+
+  // Data flow for PillDecisionTreeEntity
+  PillRequestDto:productOptionId -> getPillDto;
+  PillRequestDto:statusId -> getPillDto;
+  PillRequestDto:inStock -> getPillDto;
+  PillRequestDto:sourceable -> getPillDto;
+  PillRequestDto:competitive -> getPillDto;
+  getPillDto -> PillDecisionTreeRepository [label="getPill"];
+  PillDecisionTreeRepository -> getPillDto [label="{PillDecisionTreeEntity|\l • color\l • indicator\l • centerTextCode\l • descriptionCodes\l}"];
+
+  // Data flow for StatusDetailsEntity
+  PillRequestDto:statusId -> StatusDetailsRepository [label="getStatusDetailsEntityById"];
+  StatusDetailsRepository -> getPillDto [label="{StatusDetailsEntity|\l • centerText\l • descriptionStatus\l • description\l}"];
+
+  // Data flow for PillDto
+  getPillDto:PillDecisionTreeEntity:color -> PillDto:color;
+  getPillDto:PillDecisionTreeEntity:indicator -> PillDto:indicator;
+  getPillDto:PillDecisionTreeEntity:centerTextCode -> getCenterText;
+  getPillDto:StatusDetailsEntity:centerText -> getCenterText;
+  PillRequestDto:reasonCode -> getCenterText;
+  getCenterText -> PillDto:centerText;
+  getPillDto:PillDecisionTreeEntity:color -> getColorCode;
+  getColorCode -> PillDto:colorCode;
+  getPillDto:PillDecisionTreeEntity:descriptionCodes -> getPillDescriptions;
+  PillRequestDto:reasonCode -> getPillDescriptions;
+  getPillDto:StatusDetailsEntity:descriptionStatus -> getPillDescriptions;
+  getPillDto:StatusDetailsEntity:description -> getPillDescriptions;
+  getPillDescriptions -> getPillDescription;
+  getPillDescription -> getPillDescriptions [label="PillDescription"];
+  getPillDescriptions -> PillDto:descriptions;
+  getPillDto:PillRequestDto:productOptionId -> PillDto:productOptionId;
+}
